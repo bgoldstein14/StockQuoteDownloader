@@ -67,58 +67,35 @@ namespace StockQuoteDownloader
             HtmlDocument metalsDocument = new HtmlDocument();
             metalsDocument.LoadHtml(metalsContent);
 
-            //Get Gold price
-            HtmlNodeCollection metalPriceList = metalsDocument.DocumentNode.SelectNodes("//ul[@class='spotprice-embed']//a");
-            //IEnumerable<HtmlNode> metalPriceRefs = metalPriceList.SelectNodes("//a").Where(n => n.Attributes["href"].Value.Contains("spotprices"));
+            IEnumerable<HtmlNode> metalPriceList = metalsDocument.DocumentNode.SelectNodes("//ul[@class='spotprice-embed']//a").Where(n => n.Attributes["href"].Value.Contains("spotprices")).ToList();
 
-            var a = metalPriceList.First(n => n.Attributes["href"].Value.ToLower().Contains("gold")).InnerHtml;
-
-            decimal goldPrice = decimal.Parse(metalPriceList.First(n => n.Attributes["href"].Value.ToLower().Contains("gold")).SelectSingleNode("//ul[@class='spotprice-embed']//span[@class='current']").InnerHtml.Replace("$", ""));
-            symbols.Add("*Gold");
-            prices.Add(goldPrice);
-            decimal silverPrice = decimal.Parse(metalPriceList.First(n => n.Attributes["href"].Value.ToLower().Contains("silver")).SelectSingleNode("//ul[@class='spotprice-embed']//span[@class='current']").InnerHtml.Replace("$", ""));
-            symbols.Add("*Silver");
-            prices.Add(silverPrice);
-            decimal platinumPrice = decimal.Parse(metalPriceList.First(n => n.Attributes["href"].Value.ToLower().Contains("platinum")).SelectSingleNode("//ul[@class='spotprice-embed']//span[@class='current']").InnerHtml.Replace("$", ""));
-            symbols.Add("*Platinum");
-            prices.Add(platinumPrice);
-
-            //HtmlNode silverPrice = metalPriceList.First(n => n.Attributes["href"].Value.ToLower().Contains("silver"));
-            //HtmlNode platinumPrice = metalPriceList.First(n => n.Attributes["href"].Value.ToLower().Contains("platinum"));
-
-            /*
-            symbols.Add("*Gold");
-            price = decimal.Parse(metalPriceList.SelectNodes("//ul[@class='spotprice-embed']//span[@class='current']").First(n => n.Attributes["href"].Value.ToLower().Contains("gold")).InnerHtml.Replace("$", ""));
-            symbols.Add("*Silver");
-            price = decimal.Parse(metalPriceList.SelectNodes("//ul[@class='spotprice-embed']//span[@class='current']").First(n => n.Attributes["href"].Value.ToLower().Contains("silver")).InnerHtml.Replace("$", ""));
-            symbols.Add("*Platinum");
-            price = decimal.Parse(metalPriceList.SelectNodes("//ul[@class='spotprice-embed']//span[@class='current']").First(n => n.Attributes["href"].Value.ToLower().Contains("platinum")).InnerHtml.Replace("$", ""));
-            */
-            /*
-            foreach (HtmlNode metalPriceRef in metalPriceRefs)
+            foreach (HtmlNode metalPriceRef in metalPriceList)
             {
                 string href = metalPriceRef.Attributes["href"].Value;
 
+                //Get Gold price
                 if (href.ToLower().Contains("gold"))
                 {
                     symbols.Add("*Gold");
-                    decimal price = decimal.Parse(metalPriceRef.SelectNodes("//ul[@class='spotprice-embed']//span[@class='current']").First(n => n.Attributes["href"].Value.ToLower().Contains("gold")).InnerHtml.Replace("$", ""));
+                    price = decimal.Parse(metalPriceRef.SelectSingleNode(".//span[@class='current']").InnerHtml.Replace("$", ""));
                     prices.Add(price);
                 }
+                //Get Silver price
                 else if (href.ToLower().Contains("silver"))
                 {
                     symbols.Add("*Silver");
-                    decimal price = decimal.Parse(metalPriceRef.SelectSingleNode("//ul[@class='spotprice-embed']//span[@class='current']").InnerHtml.Replace("$", ""));
+                    price = decimal.Parse(metalPriceRef.SelectSingleNode(".//span[@class='current']").InnerHtml.Replace("$", ""));
                     prices.Add(price);
                 }
+                //Get Platinum price
                 else if (href.ToLower().Contains("platinum"))
                 {
                     symbols.Add("*Platinum");
-                    decimal price = decimal.Parse(metalPriceRef.SelectSingleNode("//ul[@class='spotprice-embed']//span[@class='current']").InnerHtml.Replace("$", ""));
+                    price = decimal.Parse(metalPriceRef.SelectSingleNode(".//span[@class='current']").InnerHtml.Replace("$", ""));
                     prices.Add(price);
                 }
             }
-            */
+            
             //string content = Task.Run(async () => await result.Content.ReadAsStringAsync()).Result;
             /*
             client.GetAsync(address).ContinueWith(
