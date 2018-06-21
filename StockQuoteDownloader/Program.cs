@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -20,18 +21,11 @@ namespace StockQuoteDownloader
             // Create the configuration object that the application will
             // use to retrieve configuration information.
             IConfigurationRoot configuration = builder.Build();
-            string path = configuration["StockListPath"];
+            string stockListPath = configuration["StockListPath"];
+            string priceResultsPath = configuration["PriceResultsPath"];
 
             var doc = new HtmlDocument();
-            doc.Load(path);
-            /*
-            HtmlNode mainNode = doc.DocumentNode.SelectSingleNode("//tbody[@class='fin-table-body']");
-            string mainNodeInnerHtml = mainNode.InnerHtml;
-            HtmlNode node0 = mainNode.SelectSingleNode("//th");
-            string node0InnerHtml = node0.InnerHtml;
-            HtmlNode node1 = mainNode.SelectSingleNode("//th[class='column-cell row-symbol']");
-            string node1InnerHtml = node1.InnerHtml;
-            */
+            doc.Load(stockListPath);
 
             List<string> symbols = new List<string>();
             List<decimal> prices = new List<decimal>();
@@ -59,7 +53,6 @@ namespace StockQuoteDownloader
             //doc.LoadHtml(html);
 
             System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
-            //string address = @"https://www.usatoday.com/money/lookup/stocks/JHG/";
             string address = @"https://www.apmex.com";
             HttpResponseMessage result = client.GetAsync(address).Result;
             result.EnsureSuccessStatusCode();
@@ -124,6 +117,25 @@ namespace StockQuoteDownloader
                     //   });
                });
             */
+
+            if (symbols.Count != prices.Count)
+            {
+                throw new DataMisalignedException("Missing pricing information.");
+            }
+
+            using (FileStream file = File.Create(priceResultsPath))
+            {
+                using (TextWriter csvFileWriter = new StreamWriter(file))
+                {
+                    int index = 0;
+
+                    foreach (string symbol in symbols)
+                    {
+                        csvFileWriter.WriteLine($"{symbol},{prices.ElementAt(index).ToString(CultureInfo.InvariantCulture)}");
+                        Console.WriteLine($"{symbol}, {prices.ElementAt(index++).ToString(CultureInfo.InvariantCulture)}");
+                    }
+                }
+            }
 
             Console.WriteLine("Hit ENTER to exit...");
             Console.ReadLine();
