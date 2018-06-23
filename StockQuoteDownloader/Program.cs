@@ -72,21 +72,21 @@ namespace StockQuoteDownloader
                 //Get Gold price
                 if (href.ToLower().Contains("gold"))
                 {
-                    symbols.Add("*Gold");
+                    symbols.Add("Gold");
                     price = decimal.Parse(metalPriceRef.SelectSingleNode(".//span[@class='current']").InnerHtml.Replace("$", ""));
                     prices.Add(price);
                 }
                 //Get Silver price
                 else if (href.ToLower().Contains("silver"))
                 {
-                    symbols.Add("*Silver");
+                    symbols.Add("Silver");
                     price = decimal.Parse(metalPriceRef.SelectSingleNode(".//span[@class='current']").InnerHtml.Replace("$", ""));
                     prices.Add(price);
                 }
                 //Get Platinum price
                 else if (href.ToLower().Contains("platinum"))
                 {
-                    symbols.Add("*Platinum");
+                    symbols.Add("Platinum");
                     price = decimal.Parse(metalPriceRef.SelectSingleNode(".//span[@class='current']").InnerHtml.Replace("$", ""));
                     prices.Add(price);
                 }
