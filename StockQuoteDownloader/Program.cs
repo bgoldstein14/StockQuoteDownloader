@@ -8,6 +8,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
+//Publish self-contained EXE...
+//https://blogs.msdn.microsoft.com/luisdem/2017/03/19/net-core-1-1-how-to-publish-a-self-contained-application/
+
 namespace StockQuoteDownloader
 {
     class Program
