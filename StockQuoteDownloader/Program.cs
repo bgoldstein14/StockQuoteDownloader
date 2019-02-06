@@ -140,6 +140,7 @@ namespace StockQuoteDownloader
                 }
             }
 
+            Console.WriteLine($"Executed on: {Environment.MachineName}.");
             Console.WriteLine("Hit ENTER to exit...");
             Console.ReadLine();
         }
