@@ -63,7 +63,7 @@ namespace StockQuoteDownloader
             HtmlDocument metalsDocument = new HtmlDocument();
             metalsDocument.LoadHtml(metalsContent);
 
-            IEnumerable<HtmlNode> metalPriceList = metalsDocument.DocumentNode.SelectNodes("//ul[@class='spotprice-embed']//a").Where(n => n.Attributes["href"].Value.Contains("spotprices")).ToList();
+            IEnumerable<HtmlNode> metalPriceList = metalsDocument.DocumentNode.SelectNodes("//ul[@class='spotprice-embed']//a"); //.Where(n => n.Attributes["href"].Value.Contains("spotprices")).ToList();
 
             foreach (HtmlNode metalPriceRef in metalPriceList)
             {
